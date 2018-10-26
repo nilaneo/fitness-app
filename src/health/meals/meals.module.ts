@@ -7,11 +7,16 @@ import { SharedModule } from '../shared/shared.module';
 
 //containers
 import { MealsComponent } from './containers/meals/meals.component';
+import { MealComponent } from './containers/meal/meal.component';
 
 export const ROUTES: Routes = [
   {
     path: '',
     component: MealsComponent
+  },
+  {
+    path: 'new',
+    component: MealComponent
   }
 ];
 
@@ -22,6 +27,6 @@ export const ROUTES: Routes = [
     RouterModule.forChild(ROUTES),
     SharedModule
   ],
-  declarations: [MealsComponent]
+  declarations: [MealsComponent, MealComponent]
 })
 export class MealsModule {}
