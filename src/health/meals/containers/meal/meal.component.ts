@@ -1,11 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   MealsService,
   Meal
 } from '../../../shared/services/meals/meals.service';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-import { Store } from 'store';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'meal',
@@ -26,9 +24,14 @@ import { Store } from 'store';
   `
 })
 export class MealComponent {
-  constructor(private mealsService: MealsService, private store: Store) {}
+  constructor(private mealsService: MealsService, private router: Router) {}
 
-  addMeal(event: Meal) {
-    console.log(event);
+  async addMeal(event: Meal) {
+    await this.mealsService.addMeal(event);
+    this.backToMeals();
+  }
+
+  backToMeals() {
+    this.router.navigate(['meals']);
   }
 }
