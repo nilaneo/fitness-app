@@ -5,6 +5,10 @@ import {
   Output,
   EventEmitter
 } from '@angular/core';
+import {
+  ScheduleItem,
+  ScheduleList
+} from 'src/health/shared/services/schedule/schedule.service';
 
 @Component({
   selector: 'schedule-calendar',
@@ -30,6 +34,16 @@ export class ScheduleCalendarComponent implements OnChanges {
   selectedDay: Date;
   selectedWeek: Date;
 
+  sections = [
+    { key: 'morning', name: 'Morning' },
+    { key: 'lunch', name: 'Lunch' },
+    { key: 'evening', name: 'Evening' },
+    { key: 'snacks', name: 'Snacks and drinks' }
+  ];
+
+  @Input()
+  items: ScheduleList;
+
   @Input()
   set date(date: Date) {
     this.selectedDay = new Date(date.getTime());
@@ -43,6 +57,10 @@ export class ScheduleCalendarComponent implements OnChanges {
   ngOnChanges() {
     this.selectedDayIndex = this.getToday(this.selectedDay);
     this.selectedWeek = this.getStartOfWeek(new Date(this.selectedDay));
+  }
+
+  getSection(name: string): ScheduleItem {
+    return (this.items && this.items[name]) || {};
   }
 
   selectDay(index: number) {
