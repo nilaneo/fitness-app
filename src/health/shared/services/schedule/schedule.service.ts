@@ -8,7 +8,7 @@ import { Workout } from '../workouts/workouts.service';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
-import { AuthService } from 'src/auth/shared/services/auth/auth.service';
+import { AuthService } from '../../../../auth/shared/services/auth/auth.service';
 
 export interface ScheduleItem {
   meals: Meal[];

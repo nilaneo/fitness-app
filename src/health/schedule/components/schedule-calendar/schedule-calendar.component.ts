@@ -26,6 +26,12 @@ import {
         (select)="selectDay($event)">
       </schedule-days>
 
+      <schedule-section
+        *ngFor="let section of sections"
+        [name]="section.name"
+        [section]="getSection(section.key)">
+      </schedule-section>
+
     </div>
   `
 })
