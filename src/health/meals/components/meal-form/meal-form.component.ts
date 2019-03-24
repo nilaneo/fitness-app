@@ -5,11 +5,12 @@ import {
   ChangeDetectionStrategy,
   Input,
   OnChanges,
-  SimpleChanges
+  SimpleChanges,
+  ElementRef,
+  ViewChild
 } from '@angular/core';
 import {
   FormArray,
-  FormGroup,
   FormBuilder,
   FormControl,
   Validators
@@ -23,18 +24,18 @@ import { Meal } from '../../../shared/services/meals/meals.service';
   styleUrls: ['meal-form.component.scss'],
   template: `
     <div class="meal-form">
-
       <form [formGroup]="form">
-
         <div class="meal-form__name">
           <label>
             <h3>Meal name</h3>
             <input
+              #mealNameInput
               type="text"
               placeholder="e.g. English Breakfast"
-              formControlName="name">
+              formControlName="name"
+            />
             <div class="error" *ngIf="required">
-              Workout name is required
+              Meal name is required
             </div>
           </label>
         </div>
@@ -45,17 +46,16 @@ import { Meal } from '../../../shared/services/meals/meals.service';
             <button
               type="button"
               class="meal-form__add"
-              (click)="addIngredient()">
-              <img src="/img/add-white.svg">
+              (click)="addIngredient()"
+            >
+              <img src="/img/add-white.svg" />
               Add food
             </button>
           </div>
           <div formArrayName="ingredients">
-            <label *ngFor="let c of ingredients.controls; index as i;">
-              <input [formControlName]="i" placeholder="e.g. Eggs">
-              <span
-                class="meal-form__remove"
-                (click)="removeIngredient(i)">
+            <label *ngFor="let c of ingredients.controls; index as i">
+              <input [formControlName]="i" placeholder="e.g. Eggs" />
+              <span class="meal-form__remove" (click)="removeIngredient(i)">
               </span>
             </label>
           </div>
@@ -67,51 +67,42 @@ import { Meal } from '../../../shared/services/meals/meals.service';
               *ngIf="!exists"
               type="button"
               class="button"
-              (click)="createMeal()">
+              (click)="createMeal()"
+            >
               Create meal
             </button>
             <button
               *ngIf="exists"
               type="button"
               class="button"
-              (click)="updateMeal()">
+              (click)="updateMeal()"
+            >
               Save
             </button>
-            <a
-              class="button button--cancel"
-              [routerLink]="['../']">
+            <a class="button button--cancel" [routerLink]="['../']">
               Cancel
             </a>
           </div>
           <div class="meal-form__delete" *ngIf="exists">
-            <div
-
-              *ngIf="toggled">
+            <div *ngIf="toggled">
               <p>Delete item?</p>
-              <button
-                class="confirm"
-                type="button"
-                (click)="removeMeal()">
+              <button class="confirm" type="button" (click)="removeMeal()">
                 Yes
               </button>
-              <button
-                class="cancel"
-                type="button"
-                (click)="toggle()">
+              <button class="cancel" type="button" (click)="toggle()">
                 No
               </button>
             </div>
             <button
               class="button button--delete"
               type="button"
-              (click)="toggle()">
+              (click)="toggle()"
+            >
               Delete
             </button>
           </div>
         </div>
-
       </form>
-
     </div>
   `
 })
@@ -128,6 +119,9 @@ export class MealFormComponent implements OnChanges {
   update = new EventEmitter<Meal>();
   @Output()
   remove = new EventEmitter<Meal>();
+
+  @ViewChild('mealNameInput')
+  mealNameInputEl: ElementRef;
 
   form = this.fb.group({
     name: ['', Validators.required],
@@ -180,6 +174,11 @@ export class MealFormComponent implements OnChanges {
   createMeal() {
     if (this.form.valid) {
       this.create.emit(this.form.value);
+    } else {
+      this.form.get('name').markAsTouched();
+      if (this.mealNameInputEl && this.mealNameInputEl.nativeElement.focus) {
+        this.mealNameInputEl.nativeElement.focus();
+      }
     }
   }
 
